@@ -54,7 +54,6 @@ from nordicsemi.dfu.init_packet_pb import InitPacketPB, DFUType, CommandTypes, V
 from nordicsemi.dfu.manifest import ManifestGenerator, Manifest
 from nordicsemi.dfu.model import HexType, FirmwareKeys
 from nordicsemi.dfu.crc16 import calc_crc16
-from nordicsemi.zigbee.ota_file import OTA_file
 
 from .signing import Signing
 
@@ -149,8 +148,6 @@ class Package:
         :param str bootloader_fw: Path to bootloader firmware file
         :param str softdevice_fw: Path to softdevice firmware file
         :param Signing signer: Instance of Signing() for Signing key file (PEM)
-        :param int zigbee_ota_min_hw_version: Minimal zigbee ota hardware version
-        :param int zigbee_ota_max_hw_version: Maximum zigbee ota hardware version
         :return: None
         """
 
@@ -207,18 +204,9 @@ class Package:
         self.work_dir = None
         self.manifest = None
 
-        if zigbee_format:
-            self.is_zigbee = True
-            self.image_type = image_type
-            self.manufacturer_id = manufacturer_id
-            self.comment = comment
-            self.zigbee_ota_min_hw_version = zigbee_ota_min_hw_version
-            self.zigbee_ota_max_hw_version = zigbee_ota_max_hw_version
-        else:
-            self.is_zigbee = False
-            self.image_type = None
-            self.manufacturer_id = None
-            self.comment = None
+        self.image_type = None
+        self.manufacturer_id = None
+        self.comment = None
 
     def __del__(self):
         """
@@ -471,27 +459,6 @@ DFU Package: <{0}>:
 
             firmware_data[FirmwareKeys.DAT_FILENAME] = \
                 init_packet_filename
-
-            if self.is_zigbee:
-                firmware_version = firmware_data[FirmwareKeys.INIT_PACKET_DATA][PacketField.FW_VERSION]
-                file_name = firmware_data[FirmwareKeys.BIN_FILENAME]
-
-                self.zigbee_ota_file = OTA_file(firmware_version,
-                                                len(init_packet.get_init_packet_pb_bytes()),
-                                                binascii.crc32(init_packet.get_init_packet_pb_bytes()) & 0xFFFFFFFF,
-                                                init_packet.get_init_packet_pb_bytes(),
-                                                os.path.getsize(file_name),
-                                                self.calculate_crc(32, file_name) & 0xFFFFFFFF,
-                                                bytes(open(file_name, 'rb').read()),
-                                                self.manufacturer_id,
-                                                self.image_type,
-                                                self.comment,
-                                                self.zigbee_ota_min_hw_version,
-                                                self.zigbee_ota_max_hw_version)
-
-                ota_file_handle = open(self.zigbee_ota_file.filename, 'wb')
-                ota_file_handle.write(self.zigbee_ota_file.binary)
-                ota_file_handle.close()
 
         # Remove SD binary file created for boot validation
         if sd_bin_created:

@@ -123,38 +123,21 @@ with open("requirements.txt") as reqs_file:
     reqs = reqs_file.readlines()
 
 
-class NoseTestCommand(TestCommand):
-    def finalize_options(self):
-        TestCommand.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        import nose
-        nose.run_exit(argv=['nosetests', '--with-xunit', '--xunit-file=unittests.xml'])
-
-
 setup(
     name="nrfutil",
     version=version.NRFUTIL_VERSION,
     license="Other/Proprietary License",
     author="Nordic Semiconductor ASA",
-    url="https://github.com/NordicSemiconductor/pc-nrfutil",
+    url="https://github.com/iamfat/pc-nrfutil",
     description="Nordic Semiconductor nrfutil utility and Python library",
     long_description=description,
     packages=find_packages(exclude=["tests.*", "tests"]),
     package_data={
-                '': ['../requirements.txt', 'thread/hex/ncp.hex', 'zigbee/hex/ota.hex',
-                     '../libusb/x86/libusb-1.0.dll', '../libusb/x64/libusb-1.0.dll',
-                     '../libusb/x64/libusb-1.0.dylib', '../libusb/LICENSE']
+                '': ['../requirements.txt']
     },
     python_requires='>=3.7, <3.10',
     install_requires=reqs,
     zipfile=None,
-    tests_require=[
-        "nose >= 1.3.4",
-        "behave"
-    ],
     zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -176,9 +159,6 @@ setup(
         'Programming Language :: Python :: 3.9',
     ],
     keywords='nordic nrf51 nrf52 ble bluetooth dfu ota softdevice serialization nrfutil pc-nrfutil',
-    cmdclass={
-        'test': NoseTestCommand
-    },
     entry_points='''
       [console_scripts]
       nrfutil = nordicsemi.__main__:cli

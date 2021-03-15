@@ -52,14 +52,12 @@ logger = logging.getLogger(__name__)
 class Dfu:
     """ Class to handle upload of a new hex image to the device. """
 
-    def __init__(self, zip_file_path, dfu_transport, connect_delay):
+    def __init__(self, zip_file_path, connect_delay):
         """
         Initializes the dfu upgrade, unpacks zip and registers callbacks.
 
         @param zip_file_path: Path to the zip file with the firmware to upgrade
         @type zip_file_path: str
-        @param dfu_transport: Transport backend to use to upgrade
-        @type dfu_transport: nordicsemi.dfu.dfu_transport.DfuTransport
         @param connect_delay: Delay in seconds before each connection to the DFU target
         @type connect_delay: int
         @return
@@ -67,8 +65,6 @@ class Dfu:
         self.temp_dir           = tempfile.mkdtemp(prefix="nrf_dfu_")
         self.unpacked_zip_path  = os.path.join(self.temp_dir, 'unpacked_zip')
         self.manifest           = Package.unpack_package(zip_file_path, self.unpacked_zip_path)
-
-        self.dfu_transport      = dfu_transport
 
         if connect_delay is not None:
             self.connect_delay = connect_delay
@@ -81,51 +77,6 @@ class Dfu:
         :return:
         """
         shutil.rmtree(self.temp_dir)
-
-
-    def _dfu_send_image(self, firmware):
-        time.sleep(self.connect_delay)
-        self.dfu_transport.open()
-
-        start_time = time.time()
-
-        logger.info("Sending init packet...")
-        with open(os.path.join(self.unpacked_zip_path, firmware.dat_file), 'rb') as f:
-            data    = f.read()
-            self.dfu_transport.send_init_packet(data)
-
-        logger.info("Sending firmware file...")
-        with open(os.path.join(self.unpacked_zip_path, firmware.bin_file), 'rb') as f:
-            data    = f.read()
-            self.dfu_transport.send_firmware(data)
-
-        end_time = time.time()
-        logger.info("Image sent in {0}s".format(end_time - start_time))
-
-        self.dfu_transport.close()
-
-
-    def dfu_send_images(self):
-        """
-        Does DFU for all firmware images in the stored manifest.
-        :return:
-        """
-        if self.manifest.softdevice_bootloader:
-            logger.info("Sending SoftDevice+Bootloader image.")
-            self._dfu_send_image(self.manifest.softdevice_bootloader)
-
-        if self.manifest.softdevice:
-            logger.info("Sending SoftDevice image...")
-            self._dfu_send_image(self.manifest.softdevice)
-
-        if self.manifest.bootloader:
-            logger.info("Sending Bootloader image.")
-            self._dfu_send_image(self.manifest.bootloader)
-
-        if self.manifest.application:
-            logger.info("Sending Application image.")
-            self._dfu_send_image(self.manifest.application)
-
 
     def dfu_get_total_size(self):
         total_size = 0

@@ -3,11 +3,6 @@ click
 crcmod
 ecdsa
 intelhex
-libusb1==1.9.3
-pc_ble_driver_py >= 0.16.1
 piccata
 protobuf
-pyserial
-pyspinel >= 1.0.0a3
 pyyaml
-tqdm
