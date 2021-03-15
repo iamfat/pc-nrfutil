@@ -4,12 +4,8 @@ crcmod==1.7
 ecdsa==0.13.3
 intelhex==2.2.1
 ipaddress==1.0.22
-libusb1==1.7.1
-pc-ble-driver-py==0.14.2
 piccata==2.0.1
 protobuf==3.10.0
-pyserial==3.4
-pyspinel==1.0.0a3
 PyYAML==5.1.2
 tqdm==4.36.1
 wrapt==1.11.2

@@ -1,29 +1,21 @@
-# nRF Util
+# This is a tailored version of nRF Util
 
-[![Latest version](https://img.shields.io/pypi/v/nrfutil.svg)](https://pypi.python.org/pypi/nrfutil)
-[![License](https://img.shields.io/pypi/l/nrfutil.svg)](https://pypi.python.org/pypi/nrfutil)
-[![Build Status](https://dev.azure.com/NordicSemiconductor/Wayland/_apis/build/status/pc-nrfutil?branchName=master)](https://dev.azure.com/NordicSemiconductor/Wayland/_build?definitionId=30)
+removed zigbee / ble  for better platform support.
+now I can use it in Apple M1 environment to generate my dfu package...
 
-nRF Util is a Python package and command-line utility that supports Device Firmware Updates (DFU) and cryptographic functionality.
+```bash
+Usage: nrfutil [OPTIONS] COMMAND [ARGS]...
 
-![screenshot](screenshot.gif)
+Options:
+  -v, --verbose            Increase verbosity of output. Can be specified more
+                           than once (up to -v -v -v -v).
 
-## Documentation
+  -o, --output <filename>  Log output to file
+  --help                   Show this message and exit.
 
-See the [InfoCenter](https://infocenter.nordicsemi.com/topic/ug_nrfutil/UG/nrfutil/nrfutil_intro.html) pages for information on how to install and use nRF Util.
-
-## Feedback
-
-Please report issues on the [DevZone](https://devzone.nordicsemi.com) portal.
-
-## Contributing
-
-Feel free to propose changes by creating a pull request.
-
-If you plan to make any non-trivial changes, please start out small and ask seek an agreement before putting too much work in it. A pull request can be declined if it does not fit well within the current product roadmap.
-
-In order to accept your pull request, we need you to sign our Contributor License Agreement (CLA). You will see instructions for doing this after having submitted your first pull request.
-
-## License
-
-See the [LICENSE](LICENSE) file for details.
+Commands:
+  keys      Generate and display private and public keys.
+  pkg       Display or generate a DFU package (zip file).
+  settings  Generate and display Bootloader DFU settings.
+  version   Display nrfutil version.
+```
