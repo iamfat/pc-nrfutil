@@ -19,3 +19,9 @@ Commands:
   settings  Generate and display Bootloader DFU settings.
   version   Display nrfutil version.
 ```
+
+## Installation
+```
+python3 setup.py install
+python3 -m nordicsemi
+```

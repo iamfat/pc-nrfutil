@@ -135,9 +135,8 @@ setup(
     package_data={
                 '': ['../requirements.txt']
     },
-    python_requires='>=3.6, <3.9',
+    python_requires='>=3.6, <=3.9',
     install_requires=reqs,
-    zipfile=None,
     zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -162,9 +161,5 @@ setup(
     entry_points='''
       [console_scripts]
       nrfutil = nordicsemi.__main__:cli
-    ''',
-    console=[{
-        "script": "./nordicsemi/__main__.py",
-        "dest_base": "nrfutil"
-    }],
+    '''
 )
